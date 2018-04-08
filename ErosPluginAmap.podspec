@@ -19,8 +19,6 @@ Pod::Spec.new do |s|
   s.source_files = "Source/*.{h,m,mm}"
   s.resources = 'Resources/*'
 
-  # s.user_target_xcconfig  = { 'FRAMEWORK_SEARCH_PATHS' => "'$(PODS_ROOT)/ErosPluginAmap'" }
   s.requires_arc = true
   s.dependency 'AMap3DMap-NO-IDFA','5.6.0'
-
 end
