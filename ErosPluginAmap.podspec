@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
                    Convenient to use the Amap in Weex
                    DESC
 
-  s.homepage     = ""
+  s.homepage     = "https://github.com/bmfe/eros-plugin-ios-amap"
   s.license      = "MIT"
   s.authors      = { "xionghuayu" => "18601949015@163.com" }
 
@@ -16,10 +16,11 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "8.0"
   s.source = { :git => 'https://github.com/bmfe/eros-plugin-ios-amap.git', :tag => s.version.to_s }
 
-  s.source_files = "eros-plugin-ios-amap/source/*.{h,m,mm}"
-  s.resources = 'eros-plugin-ios-amap/Resources/*'
+  s.source_files = "Source/*.{h,m,mm}"
+  s.resources = 'Resources/*'
 
   # s.user_target_xcconfig  = { 'FRAMEWORK_SEARCH_PATHS' => "'$(PODS_ROOT)/ErosPluginAmap'" }
   s.requires_arc = true
+  s.dependency 'AMap3DMap-NO-IDFA','5.6.0'
 
 end

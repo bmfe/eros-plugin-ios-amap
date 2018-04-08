@@ -16,6 +16,7 @@
 
 @synthesize weexInstance;
 
+WX_EXPORT_METHOD(@selector(initAmap:))
 WX_EXPORT_METHOD(@selector(getUserLocation:callback:))
 WX_EXPORT_METHOD(@selector(getLineDistance:marker:callback:))
 WX_EXPORT_METHOD_SYNC(@selector(polygonContainsMarker:ref:callback:))
@@ -23,7 +24,17 @@ WX_EXPORT_METHOD_SYNC(@selector(polygonContainsMarker:ref:callback:))
 //增加定位函数
 WX_EXPORT_METHOD(@selector(startCurrentLocation:callback:))
 
-WX_EXPORT_METHOD(@selector(initAmap:))
++ (void)load
+{
+    [WXSDKEngine registerComponent:@"weex-amap" withClass:NSClassFromString(@"WXMapViewComponent")];
+    [WXSDKEngine registerComponent:@"weex-amap-marker" withClass:NSClassFromString(@"WXMapViewMarkerComponent")];
+    [WXSDKEngine registerComponent:@"weex-amap-polyline" withClass:NSClassFromString(@"WXMapPolylineComponent")];
+    [WXSDKEngine registerComponent:@"weex-amap-polygon" withClass:NSClassFromString(@"WXMapPolygonComponent")];
+    [WXSDKEngine registerComponent:@"weex-amap-circle" withClass:NSClassFromString(@"WXMapCircleComponent")];
+    [WXSDKEngine registerComponent:@"weex-amap-info-window" withClass:NSClassFromString(@"WXMapInfoWindowComponent")];
+    
+    [WXSDKEngine registerModule:@"amap" withClass:NSClassFromString(@"WXMapViewModule")];
+}
 
 - (void)initAmap:(NSString *)appkey
 {
