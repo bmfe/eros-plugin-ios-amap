@@ -9,17 +9,17 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = ""
-  s.license 	 = "MIT"
+  s.license      = "MIT"
   s.authors      = { "xionghuayu" => "18601949015@163.com" }
 
   s.platform     = :ios
   s.ios.deployment_target = "8.0"
-  s.source =  { :path => '.' }
+  s.source = { :git => 'https://github.com/bmfe/eros-plugin-ios-amap.git', :tag => s.version.to_s }
 
-  s.source_files = "weex-plugin-amap/*.{h,m,mm}"
-  s.resources = 'Resources/*'
+  s.source_files = "eros-plugin-ios-amap/source/*.{h,m,mm}"
+  s.resources = 'eros-plugin-ios-amap/Resources/*'
 
-  s.user_target_xcconfig  = { 'FRAMEWORK_SEARCH_PATHS' => "'$(PODS_ROOT)/ErosPluginAmap'" }
+  # s.user_target_xcconfig  = { 'FRAMEWORK_SEARCH_PATHS' => "'$(PODS_ROOT)/ErosPluginAmap'" }
   s.requires_arc = true
 
 end
