@@ -10,7 +10,7 @@
 #import "WXMapViewComponent.h"
 #import "WXConvert+AMapKit.h"
 //#import "AMapLocationKit.h"
-#import "JYTLocationManager.h"
+//#import "JYTLocationManager.h"
 
 @implementation WXMapViewModule
 
@@ -22,7 +22,7 @@ WX_EXPORT_METHOD(@selector(getLineDistance:marker:callback:))
 WX_EXPORT_METHOD_SYNC(@selector(polygonContainsMarker:ref:callback:))
 
 //增加定位函数
-WX_EXPORT_METHOD(@selector(startCurrentLocation:callback:))
+//WX_EXPORT_METHOD(@selector(startCurrentLocation:callback:))
 
 + (void)load
 {
@@ -41,21 +41,21 @@ WX_EXPORT_METHOD(@selector(startCurrentLocation:callback:))
     [[AMapServices sharedServices] setApiKey:appkey];
 }
 
-- (void)startCurrentLocation:(NSString *)elemRef callback:(WXModuleCallback)callback
-{
-    [self performBlockWithRef:elemRef block:^(WXComponent *component) {
-        
-        [[JYTLocationManager shareInstance] getCurrentLocation:^(NSString *lon, NSString *lat) {
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude = lat.floatValue;
-            coordinate.longitude = lon.floatValue;
-            
-
-            [[(WXMapViewComponent *)component mapView] setCenterCoordinate:coordinate animated:YES];
-        
-        }];
-    }];
-}
+//- (void)startCurrentLocation:(NSString *)elemRef callback:(WXModuleCallback)callback
+//{
+//    [self performBlockWithRef:elemRef block:^(WXComponent *component) {
+//
+//        [[JYTLocationManager shareInstance] getCurrentLocation:^(NSString *lon, NSString *lat) {
+//            CLLocationCoordinate2D coordinate;
+//            coordinate.latitude = lat.floatValue;
+//            coordinate.longitude = lon.floatValue;
+//
+//
+//            [[(WXMapViewComponent *)component mapView] setCenterCoordinate:coordinate animated:YES];
+//
+//        }];
+//    }];
+//}
 
 - (void)getUserLocation:(NSString *)elemRef callback:(WXModuleCallback)callback
 {

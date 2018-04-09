@@ -13,11 +13,11 @@
 #import "WXMapCircleComponent.h"
 #import "WXMapInfoWindowComponent.h"
 #import "WXMapInfoWindow.h"
-#import "WXImgLoaderDefaultImpl.h"
 #import "NSArray+WXMap.h"
 #import "NSDictionary+WXMap.h"
 #import "WXConvert+AMapKit.h"
 #import <objc/runtime.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #define WX_CUSTOM_MARKER @"wx_custom_marker";
 
@@ -98,17 +98,6 @@ static const void *componentKey = &componentKey;
     BOOL _showsCompass;
 
 }
-
-- (id<WXImgLoaderProtocol>)imageLoader
-{
-    static id<WXImgLoaderProtocol> imageLoader;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        imageLoader = [WXImgLoaderDefaultImpl new];
-    });
-    return imageLoader; 
-}
-
 
 - (instancetype)initWithRef:(NSString *)ref
                        type:(NSString*)type
@@ -302,20 +291,20 @@ static const void *componentKey = &componentKey;
     a1.iconImage = marker.icon ? : nil;
     
     MAAnnotationView*  annotationView = [self.mapView viewForAnnotation:a1];
-    [[self imageLoader] downloadImageWithURL:a1.iconImage imageFrame:CGRectMake(0, 0, marker.pinWidth, marker.pinHeight) userInfo:nil completed:^(UIImage *image, NSError *error, BOOL finished) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (image) {
-                annotationView.image = image;
-                
-                if (marker.pinWidth > 0 && marker.pinHeight > 0) {
-                    annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,marker.pinWidth, marker.pinHeight);
-                }
-            }else {
-                annotationView.image = [UIImage imageNamed:@"greenPin"];
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:a1.iconImage] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+       
+        if (image) {
+            annotationView.image = image;
+            
+            if (marker.pinWidth > 0 && marker.pinHeight > 0) {
+                annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,marker.pinWidth, marker.pinHeight);
             }
-        });
+        } else {
+            annotationView.image = [UIImage imageNamed:@"greenPin"];
+        }
+        
     }];
-
     
     [self.mapView addAnnotation:a1];
 }
@@ -416,21 +405,22 @@ static const void *componentKey = &componentKey;
 
         
         annotationView.zIndex = markerComponent.zIndex;
-        [[self imageLoader] downloadImageWithURL:annotation.iconImage imageFrame:CGRectMake(0, 0, markerComponent.pinWidth, markerComponent.pinHeight) userInfo:nil completed:^(UIImage *image, NSError *error, BOOL finished) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (image) {
-                    annotationView.image = image;
-                    
-                    
-                    if (markerComponent.pinWidth > 0 && markerComponent.pinHeight > 0) {
-                        annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,markerComponent.pinWidth, markerComponent.pinHeight);
-                    }
-
-                    
-                }else {
-                    annotationView.image = [UIImage imageNamed:@"greenPin"];
+        
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:annotation.iconImage] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+           
+            if (image) {
+                annotationView.image = image;
+                
+                
+                if (markerComponent.pinWidth > 0 && markerComponent.pinHeight > 0) {
+                    annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,markerComponent.pinWidth, markerComponent.pinHeight);
                 }
-            });
+                
+                
+            }else {
+                annotationView.image = [UIImage imageNamed:@"greenPin"];
+            }
+            
         }];
         return annotationView;
     }else {
