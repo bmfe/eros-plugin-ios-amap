@@ -1,17 +1,11 @@
 # coding: utf-8
 Pod::Spec.new do |s|
-
   s.name         = "ErosPluginAmap"
   s.version      = "0.0.1"
   s.summary      = "ErosPluginAmap Source ."
-  s.description  = <<-DESC
-                   Convenient to use the Amap in Weex
-                   DESC
-
-  s.homepage     = "https://github.com/bmfe/eros-plugin-ios-amap"
+  s.homepage     = 'https://github.com/bmfe/eros-plugin-ios-amap'
   s.license      = "MIT"
   s.authors      = { "xionghuayu" => "18601949015@163.com" }
-
   s.platform     = :ios
   s.ios.deployment_target = "8.0"
   s.source = { :git => 'https://github.com/bmfe/eros-plugin-ios-amap.git', :tag => s.version.to_s }
