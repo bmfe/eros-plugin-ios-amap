@@ -9,8 +9,16 @@
 #import "WXMapViewModule.h"
 #import "WXMapViewComponent.h"
 #import "WXConvert+AMapKit.h"
-//#import "AMapLocationKit.h"
-//#import "JYTLocationManager.h"
+#import <WeexPluginLoader/WeexPluginLoader.h>
+
+WX_PlUGIN_EXPORT_MODULE(amap, WXMapViewModule)
+
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap, WXMapViewComponent)
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap-marker, WXMapViewMarkerComponent)
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap-polyline, WXMapPolylineComponent)
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap-polygon, WXMapPolygonComponent)
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap-circle, WXMapCircleComponent)
+WX_PlUGIN_EXPORT_COMPONENT(weex-amap-info-window, WXMapInfoWindowComponent)
 
 @implementation WXMapViewModule
 
@@ -21,41 +29,10 @@ WX_EXPORT_METHOD(@selector(getUserLocation:callback:))
 WX_EXPORT_METHOD(@selector(getLineDistance:marker:callback:))
 WX_EXPORT_METHOD_SYNC(@selector(polygonContainsMarker:ref:callback:))
 
-//增加定位函数
-//WX_EXPORT_METHOD(@selector(startCurrentLocation:callback:))
-
-+ (void)load
-{
-    [WXSDKEngine registerComponent:@"weex-amap" withClass:NSClassFromString(@"WXMapViewComponent")];
-    [WXSDKEngine registerComponent:@"weex-amap-marker" withClass:NSClassFromString(@"WXMapViewMarkerComponent")];
-    [WXSDKEngine registerComponent:@"weex-amap-polyline" withClass:NSClassFromString(@"WXMapPolylineComponent")];
-    [WXSDKEngine registerComponent:@"weex-amap-polygon" withClass:NSClassFromString(@"WXMapPolygonComponent")];
-    [WXSDKEngine registerComponent:@"weex-amap-circle" withClass:NSClassFromString(@"WXMapCircleComponent")];
-    [WXSDKEngine registerComponent:@"weex-amap-info-window" withClass:NSClassFromString(@"WXMapInfoWindowComponent")];
-    
-    [WXSDKEngine registerModule:@"amap" withClass:NSClassFromString(@"WXMapViewModule")];
-}
-
 - (void)initAmap:(NSString *)appkey
 {
     [[AMapServices sharedServices] setApiKey:appkey];
 }
-
-//- (void)startCurrentLocation:(NSString *)elemRef callback:(WXModuleCallback)callback
-//{
-//    [self performBlockWithRef:elemRef block:^(WXComponent *component) {
-//
-//        [[JYTLocationManager shareInstance] getCurrentLocation:^(NSString *lon, NSString *lat) {
-//            CLLocationCoordinate2D coordinate;
-//            coordinate.latitude = lat.floatValue;
-//            coordinate.longitude = lon.floatValue;
-//
-//
-//            [[(WXMapViewComponent *)component mapView] setCenterCoordinate:coordinate animated:YES];
-//
-//        }];
-//    }];
-//}
 
 - (void)getUserLocation:(NSString *)elemRef callback:(WXModuleCallback)callback
 {
