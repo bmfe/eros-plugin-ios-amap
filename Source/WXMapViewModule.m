@@ -9,7 +9,7 @@
 #import "WXMapViewModule.h"
 #import "WXMapViewComponent.h"
 #import "WXConvert+AMapKit.h"
-#import <WeexPluginLoader/WeexPluginLoader.h>
+#import <WeexPluginLoader/WeexPluginLoader/WeexPluginLoader.h>
 
 WX_PlUGIN_EXPORT_MODULE(amap, WXMapViewModule)
 
