@@ -18,7 +18,9 @@
 #import "WXConvert+AMapKit.h"
 #import <objc/runtime.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "BMDefine.h"
 
+#define BM_LOCAL @"bmlocal"
 #define WX_CUSTOM_MARKER @"wx_custom_marker";
 
 @interface MAPointAnnotation(imageAnnotation)
@@ -407,8 +409,17 @@ static const void *componentKey = &componentKey;
         annotationView.zIndex = markerComponent.zIndex;
         
         [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:annotation.iconImage] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-           
-            if (image) {
+            
+            NSURL *img = [NSURL URLWithString:annotation.iconImage];
+            if([img.scheme isEqualToString:BM_LOCAL]){
+                NSLog(@"===%@",img);
+                NSData *imageData = [NSData dataWithContentsOfFile:[self getIcon:annotation.iconImage]];
+                UIImage *image1 = [UIImage imageWithData:imageData];
+                annotationView.image = image1;
+                if (markerComponent.pinWidth > 0 && markerComponent.pinHeight > 0) {
+                    annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,markerComponent.pinWidth, markerComponent.pinHeight);
+                }
+            }else if(image) {
                 annotationView.image = image;
                 
                 
@@ -573,6 +584,36 @@ static const void *componentKey = &componentKey;
         return circleRenderer;
     }
     
+    return nil;
+}
+
+- (NSString *)getIcon:(NSString *)url{
+    if (!url) {
+        return nil;
+    }
+    NSURL *imgUrl = [NSURL URLWithString:url];
+    if (!imgUrl) {
+        return nil;
+    }
+    if ([imgUrl.scheme isEqualToString:BM_LOCAL])
+    {
+        // 拦截器
+        if (BM_InterceptorOn()) {
+            // 从jsbundle读取图片
+            UIImage *img = nil;
+            NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
+            NSData *imgData = [NSData dataWithContentsOfFile:imgPath];
+            img = [UIImage imageWithContentsOfFile:imgPath];
+            NSError *error = nil;
+            if (!img) {
+                error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"获取jsbundle中图片失败"}];
+                return nil;
+            }
+            return imgPath;
+        }
+        url = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,imgUrl.host,imgUrl.path];
+        return url;
+    }
     return nil;
 }
 
