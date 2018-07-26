@@ -295,8 +295,15 @@ static const void *componentKey = &componentKey;
     MAAnnotationView*  annotationView = [self.mapView viewForAnnotation:a1];
     
     [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:a1.iconImage] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-       
-        if (image) {
+       NSURL *img = [NSURL URLWithString:a1.iconImage];
+        if([img.scheme isEqualToString:BM_LOCAL]){
+                NSData *imageData = [NSData dataWithContentsOfFile:[self getIcon:annotation.iconImage]];
+                UIImage *image1 = [UIImage imageWithData:imageData];
+                annotationView.image = image1;
+                if (markerComponent.pinWidth > 0 && markerComponent.pinHeight > 0) {
+                    annotationView.frame = CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y,markerComponent.pinWidth, markerComponent.pinHeight);
+                }
+            }else if (image) {
             annotationView.image = image;
             
             if (marker.pinWidth > 0 && marker.pinHeight > 0) {
